@@ -14,6 +14,7 @@
 
 		<el-table :data="blogList">
 			<el-table-column label="序号" type="index" width="50"></el-table-column>
+			<el-table-column label="id" prop="id" width="50"></el-table-column>
 			<el-table-column label="标题" prop="title" show-overflow-tooltip></el-table-column>
 			<el-table-column label="用户" prop="user.username" show-overflow-tooltip></el-table-column>
 			<el-table-column label="分类" prop="category.name" width="150"></el-table-column>
@@ -133,7 +134,9 @@
 		methods: {
 			getData() {
 				getDataByQuery(this.queryInfo).then(res => {
+					
 					this.blogList = res.data.blogs.list
+					console.log(res.data.blogs.list)
 					this.categoryList = res.data.categories
 					this.total = res.data.blogs.total
 				})
