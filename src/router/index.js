@@ -13,7 +13,6 @@ const routes = [
 		hidden: true
 	},
 	{
-
 		path: '/login',
 		component: () => import('@/views/login'),
 		meta: {title: '后台管理登录'},
