@@ -27,12 +27,15 @@ export function getCategoryAndTag() {
 	})
 }
 
-export function saveBlog(blog) {
+export function saveBlog(blog,userId) {
 	return axios({
 		url: 'blog',
 		method: 'POST',
 		data: {
 			...blog
+		},
+		params:{
+			userId
 		}
 	})
 }
@@ -79,12 +82,15 @@ export function getBlogById(id) {
 	})
 }
 
-export function updateBlog(blog) {
+export function updateBlog(blog,userId) {
 	return axios({
 		url: 'blog',
 		method: 'PUT',
 		data: {
 			...blog
+		},
+		params:{
+			userId
 		}
 	})
 }

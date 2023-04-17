@@ -179,6 +179,7 @@
 				}
 				this.$refs.formRef.validate(valid => {
 					if (valid) {
+						const userId = 1
 						if (this.radio === 2) {
 							this.form.appreciation = false
 							this.form.recommend = false
@@ -194,12 +195,12 @@
 						if (this.$route.params.id) {
 							this.form.category = null
 							this.form.tags = null
-							updateBlog(this.form).then(res => {
+							updateBlog(this.form,userId).then(res => {
 								this.msgSuccess(res.msg)
 								this.$router.push('/blog/list')
 							})
 						} else {
-							saveBlog(this.form).then(res => {
+							saveBlog(this.form,userId).then(res => {
 								this.msgSuccess(res.msg)
 								this.$router.push('/blog/list')
 							})

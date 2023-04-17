@@ -26,7 +26,7 @@
 			<el-table-column label="网站" prop="website" show-overflow-tooltip></el-table-column>
 			<el-table-column label="IP" prop="ip" width="130"></el-table-column>
 			<el-table-column label="评论内容" prop="content" show-overflow-tooltip></el-table-column>
-			<el-table-column label="QQ" prop="qq" width="115"></el-table-column>
+			<el-table-column label="匿名昵称" prop="qq" width="115"></el-table-column>
 			<el-table-column label="所在页面" show-overflow-tooltip>
 				<template v-slot="scope">
 					<el-link type="success" :href="`/blog/${scope.row.blog.id}`" target="_blank" v-if="scope.row.page===0">{{ scope.row.blog.title }}</el-link>
