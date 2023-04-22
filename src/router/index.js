@@ -97,6 +97,49 @@ const routes = [
 		]
 	},
 	{
+		path: '/product',
+		name: 'Product',
+		redirect: '/product/site',
+		component: Layout,
+		meta: {title: '商品管理', icon: 'el-icon-goods'},
+		children: [
+			{
+				path: 'productCategory',
+				name: 'ProductSize',
+				component: () => import('@/views/product/ProductCategory'),
+				meta: {title: '商品分类管理', icon: 'el-icon-shopping-bag-1'}
+			},
+			{
+				path: 'product',
+				name: 'ProductInfo',
+				component: () => import('@/views/product/ProductInfo'),
+				meta: {title: '商品信息管理', icon: 'el-icon-sell'}
+			},
+			{
+				path: 'productSize',
+				name: 'ProductSize',
+				component: () => import('@/views/product/ProductSize'),
+				meta: {title: '商品价格管理', icon: 'el-icon-price-tag'}
+			},
+		
+		]
+	},
+	{
+		path: '/order',
+		name: 'Order',
+		redirect: '/order/site',
+		component: Layout,
+		meta: {title: '订单管理', icon: 'el-icon-document'},
+		children: [
+			{
+				path: 'order',
+				name: 'Order',
+				component: () => import('@/views/order/Order'),
+				meta: {title: '订单列表', icon: 'el-icon-tickets'}
+			},
+		]
+	},
+	{
 		path: '/page',
 		name: 'Page',
 		redirect: '/page/site',
@@ -109,17 +152,17 @@ const routes = [
 				component: () => import('@/views/page/SiteSetting'),
 				meta: {title: '站点设置', icon: 'bianjizhandian'}
 			},
-			{
-				path: 'friend',
-				name: 'FriendList',
-				component: () => import('@/views/page/FriendList'),
-				meta: {title: '友链管理', icon: 'friend'}
-			},
+			// {
+			// 	path: 'friend',
+			// 	name: 'FriendList',
+			// 	component: () => import('@/views/page/FriendList'),
+			// 	meta: {title: '友链管理', icon: 'friend'}
+			// },
 			{
 				path: 'about',
 				name: 'About',
 				component: () => import('@/views/page/About'),
-				meta: {title: '关于我', icon: 'el-icon-tickets'}
+				meta: {title: '关于我们', icon: 'el-icon-tickets'}
 			},
 		]
 	},
