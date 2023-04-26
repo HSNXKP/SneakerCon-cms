@@ -27,5 +27,6 @@ module.exports = {
 	 * @type {Array}
 	 * @description 默认展开的父级菜单
 	 */
-	defaultOpeneds: ['/blog', '/page', '/pictureHosting', '/system', '/log', '/statistics']
+	// defaultOpeneds: ['/blog', '/page', '/pictureHosting', '/system', '/log', '/statistics']
+	defaultOpeneds: ['']
 }

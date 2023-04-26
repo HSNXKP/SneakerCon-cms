@@ -13,6 +13,9 @@ const routes = [
 		hidden: true
 	},
 	{
+
+
+
 		path: '/login',
 		component: () => import('@/views/login'),
 		meta: {title: '后台管理登录'},
@@ -42,7 +45,7 @@ const routes = [
 				path: 'write',
 				name: 'WriteBlog',
 				component: () => import('@/views/blog/blog/WriteBlog'),
-				meta: {title: '写动态', icon: 'el-icon-edit'}
+				meta: {title: '发布动态', icon: 'el-icon-edit'}
 			},
 			// {
 			// 	path: 'moment/write',
@@ -93,6 +96,28 @@ const routes = [
 				name: 'CommentList',
 				component: () => import('@/views/blog/comment/CommentList'),
 				meta: {title: '评论管理', icon: 'el-icon-s-comment'}
+			},
+		]
+	},
+	{
+		path: '/user',
+		name: 'User',
+		redirect: '/user/info', // 重定向
+		component: Layout,
+		meta: {title: '用户管理', icon: 'el-icon-user'},
+		children: [
+			{
+				path: 'info',
+				name: 'User',
+				component: () => import('@/views/user/User'),
+				meta: {title: '用户信息管理', icon: 'el-icon-user'}
+			},
+			{
+				path: 'edit/:id',
+				name: 'EditUser',
+				component: () => import('@/views/user/EditUser'),
+				meta: {title: '编辑用户信息', icon: 'el-icon-user'},
+				hidden: true
 			},
 		]
 	},
