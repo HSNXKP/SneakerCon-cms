@@ -1,200 +1,216 @@
 <template>
   <div>
     	<!--搜索-->
-		<el-row>
+		<!-- <el-row :gutter="20">
 			<el-col :span="8">
-				<el-input placeholder="请输入标题" v-model="queryInfo.title" :clearable="true" @clear="search" @keyup.native.enter="search" size="small" style="min-width: 500px">
-					<el-select v-model="queryInfo.categoryId" slot="prepend" placeholder="请选择分类" :clearable="true" @change="search" style="width: 160px">
-						<el-option :label="item.name" :value="item.id" v-for="item in categoryList" :key="item.id"></el-option>
-					</el-select>
-					<el-button slot="append" icon="el-icon-search" @click="search"></el-button>
-				</el-input>
+				<el-input placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" >
+					<el-select  slot="prepend" v-model="brandId" placeholder="请选择分类品牌"  @change="searchBrand()"     style="width: 160px">
+						<el-option :label="item.name" :value="item.id"  :key="item.id"   v-for="item in brandList"  ></el-option>
+					</el-select>  
+					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
+				</el-input >
 			</el-col>
-		</el-row>
+			<el-col :span="2">
+				<el-button type="primary" icon="el-icon-plus" size="small" >添加品牌分类</el-button>
+			</el-col>
+		</el-row> -->
 
-		<el-table :data="blogList">
+		<el-form inline>
+			<el-form-item >
+				<el-input  placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" style="min-width: 500px">
+					<el-select  slot="prepend" v-model="brandId" placeholder="请选择分类品牌"  @change="searchBrand()"     style="width: 160px">
+						<el-option :label="item.name" :value="item.id"  :key="item.id"   v-for="item in brandList"  ></el-option>
+					</el-select>  
+					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
+				</el-input >
+			</el-form-item>
+			<el-form-item >
+				<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductCategoryVisble">添加品牌分类</el-button>
+			</el-form-item>
+		</el-form>
+
+		<el-table :data="categoryList">
 			<el-table-column label="序号" type="index" width="50"></el-table-column>
 			<el-table-column label="id" prop="id" width="50"></el-table-column>
-			<el-table-column label="品牌名称" prop="title" show-overflow-tooltip></el-table-column>
-			<el-table-column label="描述" prop="user.username" show-overflow-tooltip></el-table-column>
-			<el-table-column label="图片地址" prop="category.name" show-overflow-tooltip></el-table-column>
+			<el-table-column label="类目" prop="name"  show-overflow-tooltip></el-table-column>
+			<el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
+			<el-table-column label="图片地址" prop="image" show-overflow-tooltip></el-table-column>
 			<el-table-column label="操作" width="200">
 				<template v-slot="scope">
-					<el-button type="primary" icon="el-icon-edit" size="mini" @click="goBlogEditPage(scope.row.id)">编辑</el-button>
-					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteBlogById(scope.row.id)">
+					<el-button type="primary" icon="el-icon-edit" size="mini" @click="goEditProductCategory(scope.row.id)">编辑</el-button>
+					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteProductCategoryById(scope.row.id)">
 						<el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
 					</el-popconfirm>
 				</template>
 			</el-table-column>
 		</el-table>
-
 		<!--分页-->
-		<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pageNum"
-		               :page-sizes="[10, 20, 30, 50]" :page-size="queryInfo.pageSize" :total="total"
+		<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="categoryQueryInfo.pageNum"
+		               :page-sizes="[10, 20, 30, 50]" :page-size="categoryQueryInfo.pageSize" :total="total"
 		               layout="total, sizes, prev, pager, next, jumper" background>
 		</el-pagination>
 
-		<!--编辑可见性状态对话框-->
-		<el-dialog title="博客可见性" width="30%" :visible.sync="dialogVisible">
+		      <!--添加标签对话框-->
+			  <el-dialog :title="this.visForm.id === ''?'添加品牌下的分类':'修改分类信息'" width="50%" :visible.sync="dialogVisible" :close-on-click-modal="false" @close="cancelVisble">
 			<!--内容主体-->
-			<el-form label-width="50px" @submit.native.prevent>
-				<el-form-item>
-					<el-radio-group v-model="radio">
-						<el-radio :label="1">公开</el-radio>
-						<el-radio :label="2">私密</el-radio>
-						<el-radio :label="3">密码保护</el-radio>
-					</el-radio-group>
+			<el-form :model="visForm"  :rules="formRules" ref="visFormRef" label-width="80px">
+				<el-form-item label="分类名称" prop="name">
+					<el-input v-model="visForm.name"></el-input>
 				</el-form-item>
-				<el-form-item label="密码" v-if="radio===3">
-					<el-input v-model="visForm.password"></el-input>
+                <el-form-item label="分类描述" prop="description">
+					<el-input v-model="visForm.description"></el-input>
 				</el-form-item>
-				<el-form-item v-if="radio!==2">
-					<el-row>
-						<el-col :span="6">
-							<el-switch v-model="visForm.appreciation" active-text="赞赏"></el-switch>
-						</el-col>
-						<el-col :span="6">
-							<el-switch v-model="visForm.recommend" active-text="推荐"></el-switch>
-						</el-col>
-						<el-col :span="6">
-							<el-switch v-model="visForm.commentEnabled" active-text="评论"></el-switch>
-						</el-col>
-						<el-col :span="6">
-							<el-switch v-model="visForm.top" active-text="置顶"></el-switch>
-						</el-col>
-					</el-row>
+                <el-form-item label="分类图址" prop="image">
+					<el-input v-model="visForm.image"></el-input>
 				</el-form-item>
 			</el-form>
 			<!--底部-->
 			<span slot="footer">
-				<el-button @click="dialogVisible=false">取 消</el-button>
-				<el-button type="primary" @click="saveVisibility">保存</el-button>
+				<el-button @click="cancelVisble">取 消</el-button>
+				<el-button type="primary" @click="editProductCategory">确 定</el-button>
 			</span>
 		</el-dialog>
   </div>
 </template>
 
 <script>
-import Breadcrumb from "@/components/Breadcrumb";
-	import {getDataByQuery, deleteBlogById, updateTop, updateRecommend, updateVisibility} from '@/api/blog'
+	import Breadcrumb from "@/components/Breadcrumb";
+	import {getAllProductCategories,updateProductCategory,deleteProductCategory,getProductCategory,addProductCategory} from '@/api/productCategory'
+	import {getAllProductBrand} from '@/api/productBrand'
 
 	export default {
 		name: "ProductCategory",
 		components: {Breadcrumb},
 		data() {
 			return {
-				queryInfo: {
-					title: '',
-					categoryId: null,
+				categoryList: [],
+				brandList: [],
+				brandId: 1,
+				total: 0,
+				dialogVisible: false,
+				visForm: {
+                        id: '',
+                        name: '',
+                        description: '',
+                        image: '',
+                        parentId:''
+                  },
+				categoryQueryInfo: {
+					parentId: 1,
+					name: '',
 					pageNum: 1,
 					pageSize: 10
 				},
-				blogList: [],
-				categoryList: [],
-				total: 0,
-				dialogVisible: false,
-				blogId: 0,
-				radio: 1,
-				visForm: {
-					appreciation: false,
-					recommend: false,
-					commentEnabled: false,
-					top: false,
-					published: false,
-					password: '',
-				}
+				brandQueryInfo: {
+					parentId: -1,
+					name: '',
+					pageNum: 1,
+					pageSize: 10
+				},
+				formRules: {
+                      name: [
+                          {required: true, message: '请输入品牌名称', trigger: 'blur'},
+                          {min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur'}
+                      ],
+                      description: [
+                          {required: true, message: '请输入品牌描述', trigger: 'blur'},
+                          {min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur'}
+                      ],
+                  }
 			}
 		},
 		created() {
-			this.getData()
+			// 查询所有品牌 通过品牌进行搜索查询
+			this.getAllProductBrand()
+			// 查询当前分类的列表
+			this.getAllProductCategories()
 		},
 		methods: {
-			getData() {
-				getDataByQuery(this.queryInfo).then(res => {
-					
-					this.blogList = res.data.blogs.list
-					console.log(res.data.blogs.list)
-					this.categoryList = res.data.categories
-					this.total = res.data.blogs.total
+			getAllProductCategories() {
+				getAllProductCategories(this.categoryQueryInfo).then(res => {
+					this.categoryList = res.data.list
+					this.total = res.data.total
 				})
 			},
-			search() {
-				this.queryInfo.pageNum = 1
-				this.queryInfo.pageSize = 10
-				this.getData()
-			},
-			//切换博客置顶状态
-			blogTopChanged(row) {
-				updateTop(row.id, row.top).then(res => {
-					this.msgSuccess(res.msg);
+			getAllProductBrand(){
+				getAllProductBrand(this.brandQueryInfo).then(res => {
+					this.brandList = res.data.list
 				})
 			},
-			//切换博客推荐状态
-			blogRecommendChanged(row) {
-				updateRecommend(row.id, row.recommend).then(res => {
-					this.msgSuccess(res.msg);
+			searchCategory() {
+				getAllProductCategories(this.categoryQueryInfo).then(res => {
+					this.categoryList = res.data.list
+					this.total = res.data.total
 				})
 			},
-			//编辑博客可见性
-			editBlogVisibility(row) {
-				this.visForm = {
-					appreciation: row.appreciation,
-					recommend: row.recommend,
-					commentEnabled: row.commentEnabled,
-					top: row.top,
-					published: row.published,
-					password: row.password,
-				}
-				this.blogId = row.id
-				this.radio = this.visForm.published ? (this.visForm.password !== '' ? 3 : 1) : 2
-				this.dialogVisible = true
-			},
-			//修改博客可见性
-			saveVisibility() {
-				if (this.radio === 3 && (this.visForm.password === '' || this.visForm.password === null)) {
-					return this.msgError("密码保护模式必须填写密码！")
-				}
-				if (this.radio === 2) {
-					this.visForm.appreciation = false
-					this.visForm.recommend = false
-					this.visForm.commentEnabled = false
-					this.visForm.top = false
-					this.visForm.published = false
-				} else {
-					this.visForm.published = true
-				}
-				if (this.radio !== 3) {
-					this.visForm.password = ''
-				}
-				updateVisibility(this.blogId, this.visForm).then(res => {
-					this.msgSuccess(res.msg)
-					this.getData()
-					this.dialogVisible = false
+			searchBrand() {
+				this.categoryQueryInfo.parentId = this.brandId
+				getAllProductCategories(this.categoryQueryInfo).then(res => {
+					this.categoryList = res.data.list
+					this.total = res.data.total
 				})
 			},
 			//监听 pageSize 改变事件
 			handleSizeChange(newSize) {
-				this.queryInfo.pageSize = newSize
-				this.getData()
+				this.categoryQueryInfo.pageSize = newSize
+				this.getAllProductCategories()
 			},
 			//监听页码改变的事件
 			handleCurrentChange(newPage) {
-				this.queryInfo.pageNum = newPage
-				this.getData()
+				this.categoryQueryInfo.pageNum = newPage
+				this.getAllProductCategories()
 			},
-			goBlogEditPage(id) {
-				this.$router.push(`/blog/edit/${id}`)
+			goEditProductCategory(id){
+				getProductCategory(id).then(res => {
+                    this.visForm = res.data
+                    this.dialogVisible = true
+                })
 			},
-			deleteBlogById(id) {
-				this.$confirm('此操作将永久删除该博客<strong style="color: red">及其所有评论</strong>，是否删除?<br>建议将博客置为<strong style="color: red">私密</strong>状态！', '提示', {
+			editProductCategory(){
+				if(this.visForm.id === ''){
+					this.$refs.visFormRef.validate(valid => {
+					if (valid) {
+						this.visForm.parentId = this.brandId
+						addProductCategory(this.visForm).then(res => {
+							if (res.code === 200) {
+								this.msgSuccess(res.msg)
+								this.dialogVisible = false
+								this.categoryQueryInfo.parentId = this.brandId
+								this.getAllProductCategories()
+							} else {
+								this.msgError(res.msg)
+							}
+					})
+					}
+				})
+				}else{
+					this.$refs.visFormRef.validate(valid => {
+					if (valid) {
+						updateProductCategory(this.visForm).then(res => {
+							if(res.code === 200){
+								this.msgSuccess(res.msg)
+								this.dialogVisible = false
+								this.categoryQueryInfo.parentId = this.brandId
+								this.getAllProductCategories()
+							}else{
+								this.msgError(res.msg)
+							}
+						})
+					}
+				})
+				}
+			},
+			deleteProductCategoryById(id) {
+				this.$confirm('此操作将<strong style="color: red">永久删除该分类</strong>，是否删除?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning',
 					dangerouslyUseHTMLString: true
 				}).then(() => {
-					deleteBlogById(id).then(res => {
+					deleteProductCategory(id).then(res => {
 						this.msgSuccess(res.msg)
-						this.getData()
+						this.categoryQueryInfo.parentId = this.brandId
+						this.getAllProductCategories()
 					})
 				}).catch(() => {
 					this.$message({
@@ -202,7 +218,25 @@ import Breadcrumb from "@/components/Breadcrumb";
 						message: '已取消删除'
 					})
 				})
-			}
+			},
+			openProductCategoryVisble(){
+				this.resetForm()
+				this.dialogVisible = true
+			},
+			cancelVisble(){
+				this.dialogVisible = false
+				this.resetForm()
+			},
+			// 清空表单
+			resetForm() {
+				this.visForm = {
+					id: '',
+					name: '',
+					description: '',
+					image: '',
+					parentId:''
+				}
+			},
 		}
 	}
 </script>
@@ -212,4 +246,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 		margin-left: 10px;
 	}
 
+	.el-form--inline .el-form-item {
+		margin-bottom: 0;
+	}
 </style>
