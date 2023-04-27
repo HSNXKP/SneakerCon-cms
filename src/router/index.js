@@ -13,9 +13,6 @@ const routes = [
 		hidden: true
 	},
 	{
-
-
-
 		path: '/login',
 		component: () => import('@/views/login'),
 		meta: {title: '后台管理登录'},
@@ -100,37 +97,21 @@ const routes = [
 		]
 	},
 	{
-		path: '/user',
-		name: 'User',
-		redirect: '/user/info', // 重定向
-		component: Layout,
-		meta: {title: '用户管理', icon: 'el-icon-user'},
-		children: [
-			{
-				path: 'info',
-				name: 'User',
-				component: () => import('@/views/user/User'),
-				meta: {title: '用户信息管理', icon: 'el-icon-user'}
-			},
-			{
-				path: 'edit/:id',
-				name: 'EditUser',
-				component: () => import('@/views/user/EditUser'),
-				meta: {title: '编辑用户信息', icon: 'el-icon-user'},
-				hidden: true
-			},
-		]
-	},
-	{
 		path: '/product',
 		name: 'Product',
-		redirect: '/product/site',
+		redirect: '/product/productBrand',
 		component: Layout,
-		meta: {title: '商品管理', icon: 'el-icon-goods'},
+		meta: {title: '商品管理', icon: 'el-icon-s-goods'},
 		children: [
 			{
+				path: 'productBrand',
+				name: 'ProductBrand',
+				component: () => import('@/views/product/ProductBrand'),
+				meta: {title: '商品品牌管理', icon: 'el-icon-goods'}
+			},
+			{
 				path: 'productCategory',
-				name: 'ProductSize',
+				name: 'ProductCategory',
 				component: () => import('@/views/product/ProductCategory'),
 				meta: {title: '商品分类管理', icon: 'el-icon-shopping-bag-1'}
 			},
@@ -149,6 +130,29 @@ const routes = [
 		
 		]
 	},
+	{
+		path: '/user',
+		name: 'User',
+		redirect: '/user/info', // 重定向
+		component: Layout,
+		meta: {title: '用户管理', icon: 'el-icon-user-solid'},
+		children: [
+			{
+				path: 'info',
+				name: 'User',
+				component: () => import('@/views/user/User'),
+				meta: {title: '用户信息管理', icon: 'el-icon-user'}
+			},
+			{
+				path: 'edit/:id',
+				name: 'EditUser',
+				component: () => import('@/views/user/EditUser'),
+				meta: {title: '编辑用户信息', icon: 'el-icon-user'},
+				hidden: true
+			},
+		]
+	},
+	
 	{
 		path: '/order',
 		name: 'Order',
