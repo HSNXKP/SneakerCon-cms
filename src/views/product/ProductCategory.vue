@@ -14,6 +14,18 @@
 				<el-button type="primary" icon="el-icon-plus" size="small" >添加品牌分类</el-button>
 			</el-col>
 		</el-row> -->
+		
+		<!-- <div class="form">
+			<div class="item">
+				<el-input  placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" style="min-width: 500px">
+					<el-select  slot="prepend" v-model="brandId" placeholder="请选择分类品牌"  @change="searchBrand()"     style="width: 160px">
+						<el-option :label="item.name" :value="item.id"  :key="item.id"   v-for="item in brandList"  ></el-option>
+					</el-select>  
+					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
+				</el-input >
+			</div>
+			<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductCategoryVisble">添加品牌分类</el-button>
+		</div> -->
 
 		<el-form inline>
 			<el-form-item >
@@ -24,9 +36,7 @@
 					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
 				</el-input >
 			</el-form-item>
-			<el-form-item >
-				<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductCategoryVisble">添加品牌分类</el-button>
-			</el-form-item>
+			<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductCategoryVisble">添加品牌分类</el-button>
 		</el-form>
 
 		<el-table :data="categoryList">
@@ -242,11 +252,23 @@
 </script>
 
 <style scoped>
-.el-button + span {
+	.el-button + span {
 		margin-left: 10px;
 	}
 
 	.el-form--inline .el-form-item {
 		margin-bottom: 0;
+	}
+	.form--inline .item {
+		margin-bottom: 0;
+	}
+	.from{
+		display: block;
+  		margin-top: 0em;
+	}
+	.item{
+		display: inline-block;
+   		margin-right: 10px;
+  	 	vertical-align: top;
 	}
 </style>

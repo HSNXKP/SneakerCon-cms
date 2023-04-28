@@ -11,13 +11,11 @@
 
           <el-form inline>
 			<el-form-item >
-                <el-input placeholder="请输入品牌" v-model="brandQueryInfo.name" :clearable="true" @clear="search" @keyup.native.enter="search" size="small" style="min-width: 500px">
+                <el-input placeholder="请输入品牌" v-model="brandQueryInfo.name" :clearable="true" @clear="search" @keyup.native.enter="search" size="small" style="min-width: 400px">
                     <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
                   </el-input>
 			</el-form-item>
-			<el-form-item >
-				<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductBrandVisble">添加品牌</el-button>
-			</el-form-item>
+            <el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductBrandVisble">添加品牌</el-button>
 		</el-form>
   
           <el-table :data="brandList">

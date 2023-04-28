@@ -13,25 +13,26 @@
 			<el-table-column label="评论ID" prop="id"></el-table-column>
 			<el-table-column label="头像" width="70">
 				<template v-slot="scope">
+					<!-- https://img.picgo.net/2023/04/06/Nike-SB-Dunk-Low-White-Gum-Product258f5013cf9724a3.webp -->
 					<el-avatar shape="square" :size="50" fit="contain" :src="scope.row.avatar"></el-avatar>
 				</template>
 			</el-table-column>
 			<el-table-column label="昵称" prop="nickname">
 				<template v-slot="scope">
 					{{ scope.row.nickname }}
-					<el-tag v-if="scope.row.adminComment" size="mini" effect="dark" style="margin-left: 5px">我</el-tag>
+					<!-- <el-tag v-if="scope.row.adminComment" size="mini" effect="dark" style="margin-left: 5px">我</el-tag> -->
 				</template>
 			</el-table-column>
 			<el-table-column label="邮箱" prop="email" show-overflow-tooltip></el-table-column>
-			<el-table-column label="网站" prop="website" show-overflow-tooltip></el-table-column>
+			<!-- <el-table-column label="网站" prop="website" show-overflow-tooltip></el-table-column> -->
 			<el-table-column label="IP" prop="ip" width="130"></el-table-column>
 			<el-table-column label="评论内容" prop="content" show-overflow-tooltip></el-table-column>
 			<el-table-column label="匿名昵称" prop="qq" width="115"></el-table-column>
 			<el-table-column label="所在页面" show-overflow-tooltip>
 				<template v-slot="scope">
 					<el-link type="success" :href="`/blog/${scope.row.blog.id}`" target="_blank" v-if="scope.row.page===0">{{ scope.row.blog.title }}</el-link>
-					<el-link type="success" :href="'/about'" target="_blank" v-else-if="scope.row.page===1">关于我</el-link>
-					<el-link type="success" :href="'/friends'" target="_blank" v-else-if="scope.row.page===2">友人帐</el-link>
+					<el-link type="success" :href="'/about'" target="_blank" v-else-if="scope.row.page===1">关于我们</el-link>
+					<el-link type="success" :href="'/friends'" target="_blank" v-else-if="scope.row.page===2">友人网址</el-link>
 				</template>
 			</el-table-column>
 			<el-table-column label="发表时间" width="170">

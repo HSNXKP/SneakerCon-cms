@@ -10,13 +10,13 @@
 		<el-table :data="tagList">
 			<el-table-column label="序号" type="index" width="50"></el-table-column>
 			<el-table-column label="名称" prop="name"></el-table-column>
-			<el-table-column label="颜色">
-				<template v-slot="scope">
+			<el-table-column label="颜色" width="250">
+				<template v-slot="scope" >
 					<span style="float:left;width: 100px;">{{ scope.row.color }}</span>
 					<span style="float:left;width: 100px; height: 23px" :class="`me-${scope.row.color}`"></span>
 				</template>
 			</el-table-column>
-			<el-table-column label="操作">
+			<el-table-column label="操作" width="200">
 				<template v-slot="scope">
 					<el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
 					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteTagById(scope.row.id)">

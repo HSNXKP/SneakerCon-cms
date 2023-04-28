@@ -10,7 +10,7 @@
 		<el-table :data="categoryList">
 			<el-table-column label="序号" type="index" width="50"></el-table-column>
 			<el-table-column label="名称" prop="name"></el-table-column>
-			<el-table-column label="操作">
+			<el-table-column label="操作" width="200">
 				<template v-slot="scope">
 					<el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
 					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteCategoryById(scope.row.id)">
