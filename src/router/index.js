@@ -116,10 +116,11 @@ const routes = [
 				meta: {title: '商品分类管理', icon: 'el-icon-shopping-bag-1'}
 			},
 			{
-				path: 'product',
-				name: 'ProductInfo',
-				component: () => import('@/views/product/ProductInfo'),
-				meta: {title: '商品信息管理', icon: 'el-icon-sell'}
+				path: 'product/:id',
+				name: 'Product',
+				component: () => import('@/views/product/Product'),
+				meta: {title: '商品信息管理', icon: 'el-icon-sell'},
+				hidden: true
 			},
 			{
 				path: 'productSize',

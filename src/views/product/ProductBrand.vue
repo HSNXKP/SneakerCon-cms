@@ -63,7 +63,7 @@
   </template>
   
   <script>
-  import Breadcrumb from "@/components/Breadcrumb";
+      import Breadcrumb from "@/components/Breadcrumb";
       import {getAllProductBrand,updateProductBrand,deleteProductBrand,getProductBrand,addProductBrand} from '@/api/productBrand'
   
       export default {

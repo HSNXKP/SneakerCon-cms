@@ -1,32 +1,5 @@
 <template>
   <div>
-    	<!--搜索-->
-		<!-- <el-row :gutter="20">
-			<el-col :span="8">
-				<el-input placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" >
-					<el-select  slot="prepend" v-model="brandId" placeholder="请选择分类品牌"  @change="searchBrand()"     style="width: 160px">
-						<el-option :label="item.name" :value="item.id"  :key="item.id"   v-for="item in brandList"  ></el-option>
-					</el-select>  
-					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
-				</el-input >
-			</el-col>
-			<el-col :span="2">
-				<el-button type="primary" icon="el-icon-plus" size="small" >添加品牌分类</el-button>
-			</el-col>
-		</el-row> -->
-		
-		<!-- <div class="form">
-			<div class="item">
-				<el-input  placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" style="min-width: 500px">
-					<el-select  slot="prepend" v-model="brandId" placeholder="请选择分类品牌"  @change="searchBrand()"     style="width: 160px">
-						<el-option :label="item.name" :value="item.id"  :key="item.id"   v-for="item in brandList"  ></el-option>
-					</el-select>  
-					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
-				</el-input >
-			</div>
-			<el-button  type="primary" icon="el-icon-plus" size="small" @click="openProductCategoryVisble">添加品牌分类</el-button>
-		</div> -->
-
 		<el-form inline>
 			<el-form-item >
 				<el-input  placeholder="请输入分类名称" v-model="categoryQueryInfo.name" :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" style="min-width: 500px">
@@ -45,8 +18,9 @@
 			<el-table-column label="类目" prop="name"  show-overflow-tooltip></el-table-column>
 			<el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
 			<el-table-column label="图片地址" prop="image" show-overflow-tooltip></el-table-column>
-			<el-table-column label="操作" width="200">
+			<el-table-column label="操作" width="300">
 				<template v-slot="scope">
+					<el-button type="success" icon="el-icon-goods" size="mini" @click="goProduct(scope.row.id)">go商品</el-button>
 					<el-button type="primary" icon="el-icon-edit" size="mini" @click="goEditProductCategory(scope.row.id)">编辑</el-button>
 					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteProductCategoryById(scope.row.id)">
 						<el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
@@ -247,6 +221,9 @@
 					parentId:''
 				}
 			},
+			goProduct(id){
+				this.$router.push(`/product/product/${id}`)
+			}
 		}
 	}
 </script>
