@@ -10,3 +10,63 @@ export function getAllProduct(queryInfo) {
 		}
 	})
 }
+
+export function addProduct(visForm) {
+	return axios({
+		url: 'addProduct',
+		method: 'POST',
+		data: {
+			...visForm
+		}
+	})
+}
+
+export function updateProduct(visForm) {
+	return axios({
+		url: 'updateProduct',
+		method: 'POST',
+		data: {
+			...visForm
+		}
+	})
+}
+
+export function getProduct(productId) {
+	return axios({
+		url: 'getProduct',
+		method: 'GET',
+		params: {
+			productId
+		}
+	})
+}
+
+
+export function deleteProduct(productId) {
+	return axios({
+		url: 'deleteProduct',
+		method: 'GET',
+		params: {
+			productId
+		}
+	})
+}
+
+export function changeRecommend(id,checked) {
+	return axios({
+		url: 'changeRecommend',
+		method: 'GET',
+		params: {
+			id,
+			checked
+		}
+	})
+}
+
+
+
+
+
+
+
+

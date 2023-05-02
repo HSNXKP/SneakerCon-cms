@@ -43,14 +43,21 @@
             <el-table-column label="商品货号" prop="code" show-overflow-tooltip></el-table-column>
             <el-table-column label="商品配色" prop="color" show-overflow-tooltip></el-table-column>
             <el-table-column label="商品发售价" prop="retail" show-overflow-tooltip></el-table-column>
-            <el-table-column label="商品限购数量" prop="purchaseRestrictions" show-overflow-tooltip></el-table-column>
+            <el-table-column label="限购数量" prop="purchaseRestrictions" show-overflow-tooltip></el-table-column>
             <el-table-column label="商品描述" prop="description" show-overflow-tooltip></el-table-column>
+            <el-table-column label="是否推荐" width="100" prop="recommend">
+                        <template slot-scope="scope">
+                            <el-switch v-model="scope.row.recommend" 
+                                @change="changeRecommend(scope.row.id, scope.row.recommend)">
+                            </el-switch>
+                        </template>
+			    </el-table-column>
             <el-table-column label="操作" width="200">
                 <template v-slot="scope">
                     <el-button type="primary" icon="el-icon-edit" size="mini"
-                        @click="goEditProductBrand(scope.row.id)">编辑</el-button>
+                        @click="goEditProduct(scope.row.id)">编辑</el-button>
                     <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
-                        @onConfirm="deleteProductBrand(scope.row.id)">
+                        @onConfirm="deleteProduct(scope.row.id)">
                         <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
                     </el-popconfirm>
                 </template>
@@ -62,7 +69,7 @@
             layout="total, sizes, prev, pager, next, jumper" background>
         </el-pagination>
         <!--添加标签对话框-->
-        <el-dialog :title="this.visForm.id === '' ? '添加品牌' : '修改品牌信息'" width="50%" :visible.sync="dialogVisible"
+        <el-dialog :title="this.visForm.id === '' ? '添加商品' : '修改商品信息'" width="50%" :visible.sync="dialogVisible"
             :close-on-click-modal="false" @close="cancelVisble">
             <!--内容主体-->
             <el-form :model="visForm" :rules="formRules" ref="visFormRef" label-width="80px">
@@ -70,14 +77,10 @@
                     <el-input v-model="visForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="商品图片" prop="image">
-                    <el-upload   class="avatar-uploader"
-                     :action="base + apiUrl"
-                      :show-file-list="false" 
-                      :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload"  
-                         :headers="headers" >
-                         <img v-if="imageUrl" :src="imageUrl" >
-                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <el-upload class="avatar-uploader" :action="base + apiUrl" :show-file-list="false"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :headers="headers">
+                        <img v-if="imageUrl" :src="imageUrl">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="商品货号" prop="code">
@@ -95,19 +98,26 @@
                 <el-form-item label="商品描述" prop="description">
                     <el-input type="textarea" v-model="visForm.description"></el-input>
                 </el-form-item>
+                <el-form-item label="发售时间" prop="createTime">
+                    <div class="block">
+                        <el-date-picker v-model="visForm.createTime" type="datetime" placeholder="选择发售时间"
+                            default-time="00:00:00"    value-format="yyyy-MM-dd HH:mm:ss">
+                        </el-date-picker>
+                    </div>
+                </el-form-item>
 
             </el-form>
             <!--底部-->
             <span slot="footer">
                 <el-button @click="cancelVisble">取 消</el-button>
-                <el-button type="primary" @click="editProductBrand">确 定</el-button>
+                <el-button type="primary" @click="editProduct">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { getAllProduct } from '@/api/product'
+import { getAllProduct, addProduct, updateProduct, getProduct, deleteProduct,changeRecommend } from '@/api/product'
 
 export default {
     name: 'ProductInfo',
@@ -125,7 +135,8 @@ export default {
                 purchaseRestrictions: '',
                 description: '',
                 image: '',
-                productCategoryId: ''
+                productCategoryId: '',
+                createTime: '',
             },
             queryInfo: {
                 productCategoryId: '',
@@ -154,13 +165,16 @@ export default {
                 description: [
                     { required: true, message: '请输入品牌描述', trigger: 'blur' },
                 ],
+                createTime: [
+                    { required: true, message: '请输入商品发售时间', trigger: 'blur' },
+                ],
             },
             base: 'http://localhost:8090/admin/',
             // base:'http://43.138.9.213:8090/',
             apiUrl: 'uploadProductImage',
             headers: {
-			Authorization: window.localStorage.getItem('token')
-		    },
+                Authorization: window.localStorage.getItem('token')
+            },
             imageUrl: ''
         }
     },
@@ -196,18 +210,20 @@ export default {
             this.queryInfo.pageNum = newPage
             this.getAllProduct()
         },
-        goEditProductBrand(id) {
-            getProductBrand(id).then(res => {
+        goEditProduct(id) {
+            const productId = id
+            getProduct(productId).then(res => {
+                this.imageUrl = res.data.image
                 this.visForm = res.data
                 this.dialogVisible = true
             })
         },
-        editProductBrand() {
+        editProduct() {
             if (this.visForm.id === '') {
                 this.$refs.visFormRef.validate((valid) => {
                     if (valid) {
-                        this.visForm.parentId = -1
-                        addProductBrand(this.visForm).then(res => {
+                        this.visForm.productCategoryId = this.productCategoryId
+                        addProduct(this.visForm).then(res => {
                             this.msgSuccess(res.msg)
                             this.cancelVisble()
                             this.getAllProduct()
@@ -220,7 +236,7 @@ export default {
             } else {
                 this.$refs.visFormRef.validate((valid) => {
                     if (valid) {
-                        updateProductBrand(this.visForm).then(res => {
+                        updateProduct(this.visForm).then(res => {
                             this.msgSuccess(res.msg)
                             this.cancelVisble()
                             this.getAllProduct()
@@ -232,16 +248,22 @@ export default {
                 })
             }
         },
-        deleteProductBrand(id) {
-            this.$confirm('此操作将<strong style="color: red">永久删除该品牌</strong>，是否删除?', '提示', {
+        deleteProduct(id) {
+            this.$confirm('此操作将<strong style="color: red">永久删除该商品</strong>，是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
                 dangerouslyUseHTMLString: true
             }).then(() => {
-                deleteProductBrand(id).then(res => {
-                    this.msgSuccess(res.msg)
+                const productId = id
+                deleteProduct(productId).then(res => {
+                    if (res.code === 200) {
+                        this.msgSuccess(res.msg)
                     this.getAllProduct()
+                    } else {
+                        this.msgError(res.msg)
+                    }
+          
                 })
             }).catch(() => {
                 this.$message({
@@ -263,31 +285,44 @@ export default {
             this.visForm = {
                 id: '',
                 name: '',
+                code: '',
+                color: '',
+                retail: '',
+                purchaseRestrictions: '',
                 description: '',
                 image: '',
-                parentId: ''
+                productCategoryId: ''
             }
         },
-        handleAvatarSuccess(res,file) {
-			if (res.code === 200) {
+        handleAvatarSuccess(res, file) {
+            if (res.code === 200) {
                 this.imageUrl = URL.createObjectURL(file.raw);
-			}
-      	},
-      	beforeAvatarUpload(file) {
-      	    const isJPG = file.type === 'image/jpeg';
-		    const isPNG = file.type === 'image/png';
-			const isWebp = file.type === 'image/webp';
-      	    const isLt2M = file.size / 1024 / 1024 < 2;
+                this.visForm.image = res.data
+                console.log(this.visForm.image)
+            }
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            const isWebp = file.type === 'image/webp';
+            const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG && !isPNG && !isWebp) {
-			this.$message.error('上传头像图片格式错误!');
-			return false;
+            if (!isJPG && !isPNG && !isWebp) {
+                this.$message.error('上传头像图片格式错误!');
+                return false;
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+                return false;
+            }
+        },
+        changeRecommend(id, recommend){
+            const checked = recommend 
+                changeRecommend(id,checked).then(res=>{
+                this.msgSuccess(res.msg)
+                this.getAllProduct()
+            })
         }
-        if (!isLt2M) {
-			this.$message.error('上传头像图片大小不能超过 2MB!');
-			return false;
-        }
-      },
     }
 
 }
@@ -301,27 +336,31 @@ export default {
 .el-form--inline .el-form-item {
     margin-bottom: 0;
 }
+
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
+}
+
+.avatar-uploader .el-upload:hover {
     border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
+}
+
+.avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
     width: 178px;
     height: 178px;
     line-height: 178px;
     text-align: center;
-  }
-  .avatar {
+}
+
+.avatar {
     width: 178px;
     height: 178px;
     display: block;
-  }
+}
 </style>
