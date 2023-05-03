@@ -20,7 +20,7 @@
 			<el-table-column label="图片地址" prop="image" show-overflow-tooltip></el-table-column>
 			<el-table-column label="操作" width="300">
 				<template v-slot="scope">
-					<el-button type="success" icon="el-icon-goods" size="mini" @click="goProduct(scope.row.id)">go商品</el-button>
+					<el-button type="success" icon="el-icon-goods" size="mini" @click="goProduct(scope.row.id)">管理商品</el-button>
 					<el-button type="primary" icon="el-icon-edit" size="mini" @click="goEditProductCategory(scope.row.id)">编辑</el-button>
 					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteProductCategoryById(scope.row.id)">
 						<el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>

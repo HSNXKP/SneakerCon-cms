@@ -119,14 +119,15 @@ const routes = [
 				path: 'product/:id',
 				name: 'Product',
 				component: () => import('@/views/product/Product'),
-				meta: {title: '商品信息管理', icon: 'el-icon-sell'},
+				meta: {title: '商品信息管理'},
 				hidden: true
 			},
 			{
-				path: 'productSize',
+				path: 'productSize/:id',
 				name: 'ProductSize',
 				component: () => import('@/views/product/ProductSize'),
-				meta: {title: '商品价格管理', icon: 'el-icon-price-tag'}
+				meta: {title: '商品库存管理'},
+				hidden: true
 			},
 		
 		]

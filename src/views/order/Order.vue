@@ -11,16 +11,17 @@
     </el-form>
     <el-form inline>
 			<el-form-item label="选择订单状态" size="small">
-				<el-input  placeholder="请输入订单编号"  :clearable="true" @clear="searchCategory" @keyup.native.enter="searchCategory" size="small" style="min-width: 500px">
-					<el-select  slot="prepend" placeholder="选择订单状态"  @change="searchBrand()"     style="width: 160px">
-            <el-option>0</el-option>
-            <el-option>1</el-option>
-            <el-option>0</el-option>
-            <el-option>1</el-option>
-            <el-option>0</el-option>
-            <el-option>1</el-option>
+				<el-input  placeholder="请输入订单编号"  :clearable="true" v-model="queryInfo.orderNumber" @clear="search" @keyup.native.enter="search" size="small" style="min-width: 500px">
+					<el-select  slot="prepend" placeholder="选择订单状态" v-model="queryInfo.status" @change="search()"     style="width: 160px">
+            <!-- 0:未支付 1:已支付 2:已发货 3:已完成 4:已取消 '':全部 -->
+            <el-option value="" label="全部"></el-option>
+            <el-option value="0" label="待付款"></el-option>
+            <el-option value="1" label="已支付"></el-option>
+            <el-option value="2" label="已发货"></el-option>
+            <el-option value="3" label="已完成"></el-option>
+            <el-option value="4" label="已取消"></el-option>
 					</el-select>  
-					<el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
+					<el-button slot="append" icon="el-icon-search" @click="search"></el-button>
 				</el-input >
 			</el-form-item>
 		</el-form>
@@ -61,14 +62,9 @@
       <el-table-column label="订单编号" width="300" prop="orderNumber"></el-table-column>
       <el-table-column label="快递单号" width="100" prop="express"></el-table-column>
       <!-- dateFormat('YYYY-MM-DD HH:mm:ss') -->
-      <el-table-column label="操作" width="100" fixed="right" >
+      <el-table-column label="操作" width="200" fixed="right" >
         <template v-slot="scope">
           <el-button  v-if="scope.row.status == 1"  type="success" icon="el-icon-truck" size="mini" @click="goEditOrder(scope.row.id)">发货</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="300">
-        <template v-slot="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="goEditOrder(scope.row.id)">编辑</el-button>
           <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
             @onConfirm="deleteOrder(scope.row.id)">
             <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
@@ -82,6 +78,7 @@
       :page-sizes="[10, 20, 30, 50]" :page-size="queryInfo.pageSize" :total="total"
       layout="total, sizes, prev, pager, next, jumper" background>
     </el-pagination>
+    
 
   </div>
 </template>
@@ -96,14 +93,16 @@ export default {
   components: { DateTimeRangePicker, Breadcrumb },
   data() {
     return {
+      // 订单状态 0:未支付 1:已支付 2:已发货 3:已完成 4:已取消
       queryInfo: {
+        status: '',
         date: [],
+        orderNumber:'',
         pageNum: 1,
         pageSize: 10
       },
       orderList: [],
       total: 0
-
     }
   },
   computed: {
@@ -116,10 +115,14 @@ export default {
       this.queryInfo.date = value
     },
     search() {
-      console.log('search')
+        this.getAllOrder()
     },
     getAllOrder() {
-      getAllOrder(this.queryInfo).then(res => {
+      let query = {...this.queryInfo}
+				if (query.date && query.date.length === 2) {
+					query.date = query.date[0] + ',' + query.date[1]
+				}
+      getAllOrder(query).then(res => {
         this.orderList = res.data.list
         this.total = res.data.total
       })
@@ -127,26 +130,28 @@ export default {
     goEditOrder(id) {
       this.$router.push({ path: '/order/edit', query: { id: id } })
     },
-    deleteProductBrand(id) {
-      this.$confirm('确定删除吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteOrder(id).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.getAllOrder()
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
+    deleteOrder(id) {
+            this.$confirm('此操作将<strong style="color: red">永久删除该订单</strong>，是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                dangerouslyUseHTMLString: true
+            }).then(() => {
+                deleteOrder(id).then(res => {
+                    if (res.code === 200) {
+                        this.msgSuccess(res.msg)
+                        this.getAllOrder()
+                    } else {
+                        this.msgError(res.msg)
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })
+            })
+        },
     //监听 pageSize 改变事件
     handleSizeChange(newSize) {
       this.queryInfo.pageSize = newSize

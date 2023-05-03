@@ -52,8 +52,9 @@
                             </el-switch>
                         </template>
 			    </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="300">
                 <template v-slot="scope">
+                    <el-button type="success" icon="el-icon-sell" size="mini" @click="goProductSize(scope.row.id)">管理库存</el-button>
                     <el-button type="primary" icon="el-icon-edit" size="mini"
                         @click="goEditProduct(scope.row.id)">编辑</el-button>
                     <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
@@ -101,7 +102,7 @@
                 <el-form-item label="发售时间" prop="createTime">
                     <div class="block">
                         <el-date-picker v-model="visForm.createTime" type="datetime" placeholder="选择发售时间"
-                            default-time="00:00:00"    value-format="yyyy-MM-dd HH:mm:ss">
+                            default-time="00:00:00">
                         </el-date-picker>
                     </div>
                 </el-form-item>
@@ -322,7 +323,10 @@ export default {
                 this.msgSuccess(res.msg)
                 this.getAllProduct()
             })
-        }
+        },
+        goProductSize(id){
+            this.$router.push(`/product/productSize/${id}`)
+        },
     }
 
 }
