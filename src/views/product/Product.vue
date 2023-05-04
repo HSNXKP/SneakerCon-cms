@@ -148,11 +148,9 @@ export default {
             formRules: {
                 name: [
                     { required: true, message: '请输入商品名称', trigger: 'blur' },
-                    { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
                 ],
                 code: [
                     { required: true, message: '请输入商品货号', trigger: 'blur' },
-                    { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
                 ],
                 color: [
                     { required: true, message: '请输入品牌配色', trigger: 'blur' },

@@ -20,3 +20,15 @@ export function deleteOrder(id) {
         }
 	})
 }
+
+export function updateExpress(visForm) {
+	return axios({
+		url: 'updateExpress',
+		method: 'GET',
+        params: {
+            ...visForm
+        }
+	})
+}
+
+

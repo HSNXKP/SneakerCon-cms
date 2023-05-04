@@ -47,7 +47,7 @@
       <el-table-column label="单价" prop="price" show-overflow-tooltip></el-table-column>
       <el-table-column label="数量" prop="quantity" show-overflow-tooltip></el-table-column>
       <el-table-column label="总金额" prop="amount" show-overflow-tooltip></el-table-column>
-      <el-table-column label="订单状态" prop="status" show-overflow-tooltip>
+      <el-table-column label="订单状态" prop="status" >
         <template slot-scope="scope">
          <el-tag  type="warning" v-if="scope.row.status == 0">待付款</el-tag>
          <el-tag  type="success" v-else-if="scope.row.status == 1">已支付</el-tag>
@@ -60,11 +60,11 @@
         <template v-slot="scope">{{ scope.row.createTime | dateFormat }}</template>
       </el-table-column> 
       <el-table-column label="订单编号" width="300" prop="orderNumber"></el-table-column>
-      <el-table-column label="快递单号" width="100" prop="express"></el-table-column>
+      <el-table-column label="快递单号" width="200" prop="express"></el-table-column>
       <!-- dateFormat('YYYY-MM-DD HH:mm:ss') -->
       <el-table-column label="操作" width="200" fixed="right" >
         <template v-slot="scope">
-          <el-button  v-if="scope.row.status == 1"  type="success" icon="el-icon-truck" size="mini" @click="goEditOrder(scope.row.id)">发货</el-button>
+          <el-button  v-if="scope.row.status == 1 || scope.row.status == 2"  type="success" icon="el-icon-truck" size="mini" @click="sendGoods(scope.row.id)">发货</el-button>
           <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
             @onConfirm="deleteOrder(scope.row.id)">
             <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
@@ -78,7 +78,20 @@
       :page-sizes="[10, 20, 30, 50]" :page-size="queryInfo.pageSize" :total="total"
       layout="total, sizes, prev, pager, next, jumper" background>
     </el-pagination>
-    
+    <el-dialog title="填写快递单号" width="50%" :visible.sync="dialogVisible"
+            :close-on-click-modal="false" @close="cancelVisble">
+            <!--内容主体-->
+            <el-form :model="visForm" :rules="formRules" ref="visFormRef" label-width="80px">
+                <el-form-item label="快递单号" prop="express">
+                    <el-input v-model="visForm.express"></el-input>
+                </el-form-item>
+            </el-form>
+            <!--底部-->
+            <span slot="footer">
+                <el-button @click="cancelVisble">取 消</el-button>
+                <el-button type="primary" @click="editOrder">确 定</el-button>
+            </span>
+        </el-dialog>
 
   </div>
 </template>
@@ -86,7 +99,7 @@
 <script>
 import DateTimeRangePicker from "@/components/DateTimeRangePicker";
 import Breadcrumb from "@/components/Breadcrumb";
-import { getAllOrder,deleteOrder } from '@/api/order'
+import { getAllOrder,deleteOrder,updateExpress } from '@/api/order'
 
 export default {
   name: 'Order',
@@ -102,7 +115,17 @@ export default {
         pageSize: 10
       },
       orderList: [],
-      total: 0
+      total: 0,
+      dialogVisible: false,
+      visForm: {
+        id: '',
+        express: ''
+      },
+      formRules: {
+                express: [
+                    { required: true, message: '请输入订单单号', trigger: 'blur' },
+                ],
+            },
     }
   },
   computed: {
@@ -126,9 +149,6 @@ export default {
         this.orderList = res.data.list
         this.total = res.data.total
       })
-    },
-    goEditOrder(id) {
-      this.$router.push({ path: '/order/edit', query: { id: id } })
     },
     deleteOrder(id) {
             this.$confirm('此操作将<strong style="color: red">永久删除该订单</strong>，是否删除?', '提示', {
@@ -162,6 +182,32 @@ export default {
       this.queryInfo.pageNum = newPage
       this.getAllOrder()
     },
+    cancelVisble() {
+      this.dialogVisible = false
+      this.resetForm()
+    },
+    sendGoods(id){
+      this.visForm.id = id
+      this.dialogVisible = true
+    },
+    editOrder(){
+      updateExpress(this.visForm).then(res => {
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+          this.getAllOrder()
+          this.cancelVisble()
+        } else {
+          this.msgError(res.msg)
+        }
+      })
+    },
+     // 清空表单
+     resetForm() {
+            this.visForm = {
+                id: '',
+                express: '',
+            }
+        },
   }
 }
 </script>
