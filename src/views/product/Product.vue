@@ -79,7 +79,7 @@
                 <el-form-item label="商品图片" prop="image">
                     <el-upload class="avatar-uploader" :action="base + apiUrl" :show-file-list="false"
                         :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :headers="headers">
-                        <img v-if="imageUrl" :src="imageUrl">
+                        <img v-if="visForm.image" :src="visForm.image" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
@@ -175,7 +175,6 @@ export default {
             headers: {
                 Authorization: window.localStorage.getItem('token')
             },
-            imageUrl: ''
         }
     },
     computed: {
@@ -213,7 +212,7 @@ export default {
         goEditProduct(id) {
             const productId = id
             getProduct(productId).then(res => {
-                this.imageUrl = res.data.image
+                this.visForm.image = res.data.image
                 this.visForm = res.data
                 this.dialogVisible = true
             })
@@ -293,12 +292,11 @@ export default {
                 description: '',
                 image: '',
                 productCategoryId: ''
-            },
-            this.imageUrl = ''
+            }
         },
         handleAvatarSuccess(res, file) {
             if (res.code === 200) {
-                this.imageUrl = URL.createObjectURL(file.raw);
+                this.visForm.image = URL.createObjectURL(file.raw);
                 this.visForm.image = res.data
                 console.log(this.visForm.image)
             }
@@ -333,7 +331,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-button+span {
     margin-left: 10px;
 }
@@ -342,7 +340,7 @@ export default {
     margin-bottom: 0;
 }
 
-.avatar-uploader .el-upload {
+.avatar-uploader /deep/.el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -364,8 +362,8 @@ export default {
 }
 
 .avatar {
-    width: 178px;
-    height: 178px;
+    width: 280px;
+    height: 150px;
     display: block;
 }
 </style>

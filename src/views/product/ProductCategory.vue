@@ -16,8 +16,19 @@
 			<el-table-column label="序号" type="index" width="50"></el-table-column>
 			<el-table-column label="id" prop="id" width="50"></el-table-column>
 			<el-table-column label="类目" prop="name"  show-overflow-tooltip></el-table-column>
+			<el-table-column label="分类图" width="100">
+                <template slot-scope="scope">
+                    <el-popover placement="right" width="234px" height="160px" trigger="hover" content="....">
+                        <div style="width: 380px;height: 200px;"><img style="width: 100%;height: 100%;"
+                                :src="scope.row.image" />
+                        </div>
+                        <div slot="reference" style="width: 65px;height: 36px;"><img style="width: 100%;height: 100%;"
+                                :src="scope.row.image" />
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
 			<el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
-			<el-table-column label="图片地址" prop="image" show-overflow-tooltip></el-table-column>
 			<el-table-column label="操作" width="300">
 				<template v-slot="scope">
 					<el-button type="success" icon="el-icon-goods" size="mini" @click="goProduct(scope.row.id)">管理商品</el-button>
@@ -44,9 +55,13 @@
                 <el-form-item label="分类描述" prop="description">
 					<el-input v-model="visForm.description"></el-input>
 				</el-form-item>
-                <el-form-item label="分类图址" prop="image">
-					<el-input v-model="visForm.image"></el-input>
-				</el-form-item>
+				<el-form-item label="商品图片" prop="image">
+                    <el-upload class="avatar-uploader" :action="base + apiUrl" :show-file-list="false"
+                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :headers="headers" :data="type">
+                        <img v-if="visForm.image" :src="visForm.image" class="avatar">
+                        <i v-else  class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </el-form-item>
 			</el-form>
 			<!--底部-->
 			<span slot="footer">
@@ -100,7 +115,16 @@
                           {required: true, message: '请输入品牌描述', trigger: 'blur'},
                           {min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur'}
                       ],
-                  }
+                  },
+				  base: 'http://localhost:8090/admin/',
+                  // base:'http://43.138.9.213:8090/',
+                  apiUrl: 'uploadProductCategoryImage',
+                  headers: {
+                  Authorization: window.localStorage.getItem('token')
+                 },
+                type: {
+                    type: 'productCategoryImage'
+                } 
 			}
 		},
 		created() {
@@ -224,7 +248,29 @@
 			},
 			goProduct(id){
 				this.$router.push(`/product/product/${id}`)
-			}
+			},
+			handleAvatarSuccess(res, file) {
+            if (res.code === 200) {
+                this.visForm.image = URL.createObjectURL(file.raw);
+                this.visForm.image = res.data
+                console.log(this.visForm.image)
+            }
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            const isWebp = file.type === 'image/webp';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG && !isPNG && !isWebp) {
+                this.$message.error('上传头像图片格式错误!');
+                return false;
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+                return false;
+            }
+        },
 		}
 	}
 </script>
@@ -249,4 +295,27 @@
    		margin-right: 10px;
   	 	vertical-align: top;
 	}
+	.avatar-uploader /deep/.el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 234px;
+    height: 160px;
+    display: block;
+}
 </style>
