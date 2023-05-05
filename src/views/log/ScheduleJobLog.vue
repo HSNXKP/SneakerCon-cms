@@ -30,7 +30,7 @@
 			<el-table-column label="执行时间" width="170">
 				<template v-slot="scope">{{ scope.row.createTime | dateFormat }}</template>
 			</el-table-column>
-			<el-table-column label="操作" width="200">
+			<el-table-column label="操作" width="300">
 				<template v-slot="scope">
 					<el-button type="warning" icon="el-icon-view" size="mini" @click="showDetail(scope.row)">查看详情</el-button>
 					<el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteJobLogByLogId(scope.row.logId)">

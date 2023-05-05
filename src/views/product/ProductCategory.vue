@@ -210,6 +210,7 @@
 			cancelVisble(){
 				this.dialogVisible = false
 				this.resetForm()
+				this.$refs.visFormRef.resetFields()
 			},
 			// 清空表单
 			resetForm() {

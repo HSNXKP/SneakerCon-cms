@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <el-form inline>
             <el-form-item>
                 <el-input placeholder="请输入商品名称" v-model="queryInfo.name" :clearable="true" @clear="search"
@@ -54,7 +53,7 @@
 			    </el-table-column>
             <el-table-column label="操作" width="300">
                 <template v-slot="scope">
-                    <el-button type="success" icon="el-icon-sell" size="mini" @click="goProductSize(scope.row.id)">管理库存</el-button>
+                    <el-button type="success" icon="el-icon-sell" size="mini" @click="goProductInventoryInfo(scope.row.id)">管理库存</el-button>
                     <el-button type="primary" icon="el-icon-edit" size="mini"
                         @click="goEditProduct(scope.row.id)">编辑</el-button>
                     <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
@@ -119,6 +118,7 @@
 
 <script>
 import { getAllProduct, addProduct, updateProduct, getProduct, deleteProduct,changeRecommend } from '@/api/product'
+import {checkNumber} from "@/util/reg";
 
 export default {
     name: 'ProductInfo',
@@ -160,6 +160,7 @@ export default {
                 ],
                 purchaseRestrictions: [
                     { required: true, message: '请输入限购数量', trigger: 'blur' },
+                    {validator: checkNumber, trigger: 'blur'}
                 ],
                 description: [
                     { required: true, message: '请输入品牌描述', trigger: 'blur' },
@@ -278,6 +279,7 @@ export default {
         cancelVisble() {
             this.dialogVisible = false
             this.resetForm()
+            this.$refs.visFormRef.resetFields()
         },
         // 清空表单
         resetForm() {
@@ -291,7 +293,8 @@ export default {
                 description: '',
                 image: '',
                 productCategoryId: ''
-            }
+            },
+            this.imageUrl = ''
         },
         handleAvatarSuccess(res, file) {
             if (res.code === 200) {
@@ -322,8 +325,8 @@ export default {
                 this.getAllProduct()
             })
         },
-        goProductSize(id){
-            this.$router.push(`/product/productSize/${id}`)
+        goProductInventoryInfo(id){
+            this.$router.push(`/inventory/ProductInventoryInfo/${id}`)
         },
     }
 

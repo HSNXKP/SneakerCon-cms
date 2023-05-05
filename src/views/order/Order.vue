@@ -138,6 +138,8 @@ export default {
       this.queryInfo.date = value
     },
     search() {
+      this.queryInfo.pageNum = 1
+      this.queryInfo.pageSize = 10
         this.getAllOrder()
     },
     getAllOrder() {

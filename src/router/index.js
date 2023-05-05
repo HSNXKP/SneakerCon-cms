@@ -32,6 +32,28 @@ const routes = [
 		]
 	},
 	{
+		path: '/user',
+		name: 'User',
+		redirect: '/user/info', // 重定向
+		component: Layout,
+		meta: {title: '用户管理', icon: 'el-icon-user-solid'},
+		children: [
+			{
+				path: 'info',
+				name: 'User',
+				component: () => import('@/views/user/User'),
+				meta: {title: '用户信息管理', icon: 'el-icon-user'}
+			},
+			{
+				path: 'edit/:id',
+				name: 'EditUser',
+				component: () => import('@/views/user/EditUser'),
+				meta: {title: '编辑用户信息', icon: 'el-icon-user'},
+				hidden: true
+			},
+		]
+	},
+	{
 		path: '/blog',
 		name: 'Blog',
 		redirect: '/blog/write',
@@ -122,14 +144,6 @@ const routes = [
 				meta: {title: '商品信息管理'},
 				hidden: true
 			},
-			{
-				path: 'productSize/:id',
-				name: 'ProductSize',
-				component: () => import('@/views/product/ProductSize'),
-				meta: {title: '商品库存管理'},
-				hidden: true
-			},
-		
 		]
 	},
 	{
@@ -137,40 +151,24 @@ const routes = [
 		name: 'Inventory',
 		redirect: '/inventory/ProductInventory',
 		component: Layout,
-		meta: {title: '库存管理', icon: 'el-icon-s-home'},
+		meta: {title: '库存管理', icon: 'productInventory'},
 		children: [
 			{
-				path: 'productInventory/:id',
+				path: 'productInventory',
 				name: 'ProductInventory',
 				component: () => import('@/views/inventory/ProductInventory'),
-				meta: {title: '商品库存管理', icon: 'el-icon-wallet'}
-			},
-	
-		]
-	},
-	{
-		path: '/user',
-		name: 'User',
-		redirect: '/user/info', // 重定向
-		component: Layout,
-		meta: {title: '用户管理', icon: 'el-icon-user-solid'},
-		children: [
-			{
-				path: 'info',
-				name: 'User',
-				component: () => import('@/views/user/User'),
-				meta: {title: '用户信息管理', icon: 'el-icon-user'}
+				meta: {title: '商品库存管理', icon: 'el-icon-box'}
 			},
 			{
-				path: 'edit/:id',
-				name: 'EditUser',
-				component: () => import('@/views/user/EditUser'),
-				meta: {title: '编辑用户信息', icon: 'el-icon-user'},
+				path: 'productInventoryInfo/:id',
+				name: 'ProductInventoryInfo',
+				component: () => import('@/views/inventory/ProductInventoryInfo'),
+				meta: {title: '商品库存详情'},
 				hidden: true
 			},
+	
 		]
 	},
-	
 	{
 		path: '/order',
 		name: 'Order',

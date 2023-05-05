@@ -63,6 +63,19 @@ export function changeRecommend(id,checked) {
 	})
 }
 
+export function getAllProductByCodeOrName(productQueryInfo) {
+	return axios({
+		url: 'getAllProductByCodeOrName',
+		method: 'GET',
+		params: {
+			...productQueryInfo
+		}
+	})
+}
+
+
+
+
 
 
 

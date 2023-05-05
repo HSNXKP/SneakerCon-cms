@@ -11,8 +11,8 @@
 
 		<el-table :data="jobList">
 			<el-table-column label="任务ID" prop="jobId" width="80"></el-table-column>
-			<el-table-column label="Bean" prop="beanName"></el-table-column>
-			<el-table-column label="方法名" prop="methodName"></el-table-column>
+			<el-table-column label="Bean" prop="beanName" width="200"></el-table-column>
+			<el-table-column label="方法名" prop="methodName" width="200"></el-table-column>
 			<el-table-column label="参数" prop="params"></el-table-column>
 			<el-table-column label="Cron" prop="cron"></el-table-column>
 			<el-table-column label="状态" width="80">
@@ -20,7 +20,7 @@
 					<el-switch v-model="scope.row.status" @change="jobStatusChanged(scope.row)"></el-switch>
 				</template>
 			</el-table-column>
-			<el-table-column label="备注" prop="remark"></el-table-column>
+			<el-table-column label="备注" prop="remark" show-overflow-tooltip=""></el-table-column>
 			<el-table-column label="创建时间" width="170">
 				<template v-slot="scope">{{ scope.row.createTime | dateFormat }}</template>
 			</el-table-column>
