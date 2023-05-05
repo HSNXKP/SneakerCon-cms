@@ -42,7 +42,7 @@
             </el-table-column>
             <el-table-column label="商品货号" prop="code" show-overflow-tooltip></el-table-column>
             <el-table-column label="商品配色" prop="color" show-overflow-tooltip></el-table-column>
-            <el-table-column label="商品发售价" prop="retail" show-overflow-tooltip></el-table-column>
+            <el-table-column label="发售价" prop="retail" show-overflow-tooltip></el-table-column>
             <el-table-column label="限购数量" prop="purchaseRestrictions" show-overflow-tooltip></el-table-column>
             <el-table-column label="商品描述" prop="description" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否推荐" width="100" prop="recommend">

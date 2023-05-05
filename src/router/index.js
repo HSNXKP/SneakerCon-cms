@@ -133,6 +133,22 @@ const routes = [
 		]
 	},
 	{
+		path: '/inventory',
+		name: 'Inventory',
+		redirect: '/inventory/ProductInventory',
+		component: Layout,
+		meta: {title: '库存管理', icon: 'el-icon-s-home'},
+		children: [
+			{
+				path: 'productInventory/:id',
+				name: 'ProductInventory',
+				component: () => import('@/views/inventory/ProductInventory'),
+				meta: {title: '商品库存管理', icon: 'el-icon-wallet'}
+			},
+	
+		]
+	},
+	{
 		path: '/user',
 		name: 'User',
 		redirect: '/user/info', // 重定向
