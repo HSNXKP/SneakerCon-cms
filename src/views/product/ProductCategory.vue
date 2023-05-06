@@ -109,11 +109,9 @@
 				formRules: {
                       name: [
                           {required: true, message: '请输入品牌名称', trigger: 'blur'},
-                          {min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur'}
                       ],
                       description: [
                           {required: true, message: '请输入品牌描述', trigger: 'blur'},
-                          {min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur'}
                       ],
                   },
 				  base: 'http://localhost:8090/admin/',
