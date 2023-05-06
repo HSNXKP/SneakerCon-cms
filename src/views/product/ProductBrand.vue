@@ -24,11 +24,11 @@
               <el-table-column label="品牌名称" prop="name"  show-overflow-tooltip></el-table-column>
               <el-table-column label="分类图" width="100">
                 <template slot-scope="scope">
-                    <el-popover placement="right" width="234px" height="160px" trigger="hover" content="....">
-                        <div style="width: 380px;height: 200px;"><img style="width: 100%;height: 100%;"
+                    <el-popover placement="right" width="200px" height="160px" trigger="hover" content="....">
+                        <div style="width: 350px;height: 170px;"><img style="width: 100%;height: 100%;"
                                 :src="scope.row.image" />
                         </div>
-                        <div slot="reference" style="width: 65px;height: 36px;"><img style="width: 100%;height: 100%;"
+                        <div slot="reference" style="width: 50px;height: 36px;"><img style="width: 100%;height: 100%;"
                                 :src="scope.row.image" />
                         </div>
                     </el-popover>
