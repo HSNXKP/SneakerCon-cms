@@ -100,13 +100,13 @@
             <!--内容主体-->
             <el-form :model="order"  label-width="80px">
                 <el-form-item label="退款原因" prop="refundReason">
-                    <el-input  disabled></el-input>
+                    <el-input  disabled v-model="refundReason"></el-input>
                 </el-form-item>
                 <el-form-item label="退款金额" prop="refundAmount">
-                    <el-input disabled></el-input>
+                    <el-input disabled v-model="refundAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="退款备注" prop="refundRemarks">
-                    <el-input  disabled></el-input>
+                    <el-input  disabled v-model="order.refundRemarks" type="textarea"></el-input>
                 </el-form-item>
             </el-form>
            <!--底部-->
@@ -247,6 +247,7 @@ export default {
     goExamine(order){
       this.examineDialogVisible = true
       this.order = order
+      console.log(this.order)
       this.refundVisForm.orderNumber = order.orderNumber
       this.refundVisForm.userId = order.userId
     },
