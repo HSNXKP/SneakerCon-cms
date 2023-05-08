@@ -67,8 +67,8 @@
       <el-table-column label="操作" width="200" fixed="right" >
         <template v-slot="scope">
           <el-button  v-if="scope.row.status == 1 || scope.row.status == 2"  type="success" icon="el-icon-truck" size="mini" @click="sendGoods(scope.row.id)">发货</el-button>
-          <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red"
-            @onConfirm="deleteOrder(scope.row.id)">
+          <el-button  v-if="scope.row.status == 5"  icon="el-icon-s-check" size="mini" @click="goExamine(scope.row)">审核</el-button>
+          <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @onConfirm="deleteOrder(scope.row.id)">
             <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
           </el-popconfirm>
         </template>
@@ -83,7 +83,7 @@
     <el-dialog title="填写快递单号" width="50%" :visible.sync="dialogVisible"
             :close-on-click-modal="false" @close="cancelVisble">
             <!--内容主体-->
-            <el-form :model="visForm" :rules="formRules" ref="visFormRef" label-width="80px">
+            <el-form :rules="formRules" ref="visFormRef" label-width="80px">
                 <el-form-item label="快递单号" prop="express">
                     <el-input v-model="visForm.express"></el-input>
                 </el-form-item>
@@ -93,7 +93,29 @@
                 <el-button @click="cancelVisble">取 消</el-button>
                 <el-button type="primary" @click="editOrder">确 定</el-button>
             </span>
-        </el-dialog>
+    </el-dialog>
+
+    <el-dialog title="审核退款" width="50%" :visible.sync="examineDialogVisible"
+            :close-on-click-modal="false" @close="cancelExamineVisble">
+            <!--内容主体-->
+            <el-form :model="order"  label-width="80px">
+                <el-form-item label="退款原因" prop="refundReason">
+                    <el-input  disabled></el-input>
+                </el-form-item>
+                <el-form-item label="退款金额" prop="refundAmount">
+                    <el-input disabled></el-input>
+                </el-form-item>
+                <el-form-item label="退款备注" prop="refundRemarks">
+                    <el-input  disabled></el-input>
+                </el-form-item>
+            </el-form>
+           <!--底部-->
+           <span slot="footer">
+                <el-button @click="cancelExamineVisble">取 消</el-button>
+                <el-button type="danger" @click="refuseRefund">拒绝退款</el-button>
+                <el-button type="success" @click="agreeRefund">同意退款</el-button>
+            </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -101,11 +123,11 @@
 <script>
 import DateTimeRangePicker from "@/components/DateTimeRangePicker";
 import Breadcrumb from "@/components/Breadcrumb";
-import { getAllOrder,deleteOrder,updateExpress } from '@/api/order'
+import { getAllOrder,deleteOrder,updateExpress,refund,refuseRefund} from '@/api/order'
 
 export default {
   name: 'Order',
-  components: { DateTimeRangePicker, Breadcrumb },
+  components: { DateTimeRangePicker, Breadcrumb},
   data() {
     return {
       // 订单状态 0:未支付 1:已支付 2:已发货 3:已完成 4:已取消
@@ -119,10 +141,16 @@ export default {
       orderList: [],
       total: 0,
       dialogVisible: false,
+      examineDialogVisible:false,
       visForm: {
         id: '',
         express: ''
       },
+      refundVisForm: {
+        orderNumber: '',
+        userId: ''
+      },
+      order: {},
       formRules: {
                 express: [
                     { required: true, message: '请输入订单单号', trigger: 'blur' },
@@ -207,11 +235,48 @@ export default {
     },
      // 清空表单
      resetForm() {
-            this.visForm = {
-                id: '',
-                express: '',
-            }
+        this.visForm = {
+          id: '',
+          express: '',
         },
+        this.refundVisForm = {
+          orderNumber: '',
+          userId: ''
+        }
+    },
+    goExamine(order){
+      this.examineDialogVisible = true
+      this.order = order
+      this.refundVisForm.orderNumber = order.orderNumber
+      this.refundVisForm.userId = order.userId
+    },
+    cancelExamineVisble(){
+      this.examineDialogVisible = false
+      this.resetForm()
+    },
+    refuseRefund(){
+      refuseRefund(this.refundVisForm).then(res =>{
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+          this.getAllOrder()
+          this.cancelExamineVisble()
+        } else {
+          this.msgError(res.msg)
+        }
+      })
+    },
+    agreeRefund(){
+      refund(this.refundVisForm).then(res =>{
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+          this.getAllOrder()
+          this.cancelExamineVisble()
+        } else {
+          this.msgError(res.msg)
+        }
+      })
+    },
+    
   }
 }
 </script>

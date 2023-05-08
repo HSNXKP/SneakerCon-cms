@@ -202,9 +202,9 @@
   }
   .product{
       margin-left: 8px;
-        margin-top: 6px;
-        font-size: 12px;
-        color: #999;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #999;
   }
   
   </style>

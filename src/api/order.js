@@ -31,4 +31,26 @@ export function updateExpress(visForm) {
 	})
 }
 
+export function refund(refundVisForm) {
+	return axios({
+		url: 'refund',
+		method: 'GET',
+        params: {
+            ...refundVisForm
+        }
+	})
+}
+
+export function refuseRefund(refundVisForm) {
+	return axios({
+		url: 'refuseRefund',
+		method: 'GET',
+        params: {
+            ...refundVisForm
+        }
+	})
+}
+
+
+
 
