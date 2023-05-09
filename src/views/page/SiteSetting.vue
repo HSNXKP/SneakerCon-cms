@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-row :gutter="20">
+		<el-row :gutter="20" class="m-mobile-hide">
 			<el-col :span="12">
 				<el-card>
 					<div slot="header">
@@ -37,6 +37,46 @@
 				</el-card>
 			</el-col>
 		</el-row>
+
+	<div class="m-mobile-show">
+		<el-row style="margin-top: 20px">
+			<el-card>
+					<div slot="header">
+						<span>基础设置</span>
+					</div>
+					<el-form label-position="right" label-width="100px">
+						<el-form-item :label="item.nameZh" v-for="item in typeMap.type1" :key="item.id">
+							<el-input v-model="item.value" size="mini"></el-input>
+						</el-form-item>
+					</el-form>
+				</el-card>
+		</el-row>
+
+		<el-row style="margin-top: 20px">
+			<el-card>
+					<div slot="header">
+						<span>资料卡</span>
+					</div>
+					<el-form label-position="right" label-width="100px">
+						<el-form-item :label="item.nameZh" v-for="item in typeMap.type2" :key="item.id">
+							<div v-if="item.nameEn=='favorite'">
+								<el-col :span="20">
+									<el-input v-model="item.value" size="mini"></el-input>
+								</el-col>
+								<el-col :span="4">
+									<el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteFavorite(item)">删除</el-button>
+								</el-col>
+							</div>
+							<div v-else>
+								<el-input v-model="item.value" size="mini"></el-input>
+							</div>
+						</el-form-item>
+						<el-button type="primary" size="mini" icon="el-icon-plus" @click="addFavorite">添加自定义</el-button>
+					</el-form>
+				</el-card>
+		</el-row>
+	</div>
+
 
 		<el-row style="margin-top: 20px">
 			<el-card>
@@ -181,5 +221,29 @@
 </script>
 
 <style scoped>
+
+@media screen and (max-width: 767px) {
+    .m-mobile-hide {
+        display: none !important;
+    }
+
+    .m-mobile-show {
+        display: block !important;
+    }
+}
+
+@media screen and (min-width: 767px) {
+    .m-mobile-hide {
+        display: block !important;
+    }
+
+    .m-mobile-show {
+        display: none !important;
+    }
+}
+
+
+
+	
 
 </style>
