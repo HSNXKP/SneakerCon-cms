@@ -100,10 +100,10 @@
             <!--内容主体-->
             <el-form :model="order"  label-width="80px">
                 <el-form-item label="退款原因" prop="refundReason">
-                    <el-input  disabled v-model="refundReason"></el-input>
+                    <el-input  disabled v-model="order.refundReason"></el-input>
                 </el-form-item>
                 <el-form-item label="退款金额" prop="refundAmount">
-                    <el-input disabled v-model="refundAmount"></el-input>
+                    <el-input disabled v-model="order.refundAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="退款备注" prop="refundRemarks">
                     <el-input  disabled v-model="order.refundRemarks" type="textarea"></el-input>
