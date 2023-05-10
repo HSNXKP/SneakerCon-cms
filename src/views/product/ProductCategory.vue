@@ -114,8 +114,8 @@
                           {required: true, message: '请输入品牌描述', trigger: 'blur'},
                       ],
                   },
-				  base: 'http://localhost:8090/admin/',
-                  // base:'http://43.138.9.213:8090/',
+				//   base: 'http://localhost:8090/admin/',
+                  base:'http://43.138.9.213:8090/admin/',
                   apiUrl: 'uploadProductCategoryImage',
                   headers: {
                   Authorization: window.localStorage.getItem('token')

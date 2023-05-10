@@ -169,8 +169,8 @@ export default {
                     { required: true, message: '请输入商品发售时间', trigger: 'blur' },
                 ],
             },
-            base: 'http://localhost:8090/admin/',
-            // base:'http://43.138.9.213:8090/',
+            // base: 'http://localhost:8090/admin/',
+            base:'http://43.138.9.213:8090/admin/',
             apiUrl: 'uploadProductImage',
             headers: {
                 Authorization: window.localStorage.getItem('token')
