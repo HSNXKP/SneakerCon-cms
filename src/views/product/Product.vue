@@ -170,8 +170,12 @@ export default {
                 ],
             },
             // base: 'http://localhost:8090/admin/',
-            base:'http://43.138.9.213:8090/admin/',
-            apiUrl: 'uploadProductImage',
+            // base:'http://43.138.9.213:8090/admin/',
+            // 服务器环境
+            base: '/api',
+            apiUrl: '/uploadProductImage',
+            // 本地环境 不加/
+            // apiUrl: 'uploadProductImage', 
             headers: {
                 Authorization: window.localStorage.getItem('token')
             },

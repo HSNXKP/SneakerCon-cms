@@ -53,9 +53,11 @@
         <template slot-scope="scope">
          <el-tag  type="warning" v-if="scope.row.status == 0">待付款</el-tag>
          <el-tag  type="success" v-else-if="scope.row.status == 1">已支付</el-tag>
-         <el-tag  type="info" v-else-if="scope.row.status == 2">已发货</el-tag>
+         <el-tag  type="danger" v-else-if="scope.row.status == 2">已发货</el-tag>
          <el-tag  type="" v-else-if="scope.row.status == 3">已完成</el-tag>
-         <el-tag  type="danger" v-else-if="scope.row.status == 4">已取消</el-tag>
+         <el-tag  type="info" v-else-if="scope.row.status == 4">已取消</el-tag>
+         <el-tag  type="warning" v-else-if="scope.row.status == 5">退款中</el-tag>
+         <el-tag  type="info" v-else-if="scope.row.status == 6">退款成功</el-tag>
       </template>
       </el-table-column>
       <el-table-column label="创建时间" width="180" >

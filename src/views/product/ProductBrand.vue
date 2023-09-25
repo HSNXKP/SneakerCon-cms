@@ -111,8 +111,12 @@
                       ],
                   },
                 //   base: 'http://localhost:8090/admin/',
-                  base:'http://43.138.9.213:8090/admin/',
-                  apiUrl: 'uploadProductCategoryImage',
+                //   base:'http://43.138.9.213:8090/admin/',
+                    base: '/api',
+                    // 服务器环境 加/
+                  apiUrl: '/uploadProductCategoryImage',
+                  // 本地环境 不加/
+                //   apiUrl: 'uploadProductCategoryImage',
                   headers: {
                   Authorization: window.localStorage.getItem('token')
                  },

@@ -110,9 +110,13 @@
           {label: '灰色', value: 'grey'},
           {label: '黑色', value: 'black'},
           ],
-          base: 'http://localhost:8090/admin/',
+          // base: 'http://localhost:8090/admin/',
           // base:'http://43.138.9.213:8090/',
-          apiUrl : 'uploadAvatarImage',
+          base:'/api',
+          // 服务器环境加/
+          apiUrl : '/uploadAvatarImage',
+          // 本地环境不加/
+          // apiUrl : 'uploadAvatarImage',
           headers: {
               Authorization: window.localStorage.getItem('token')
           },
